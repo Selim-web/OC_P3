@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title> GBAF - Connexion</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <header>
+        <img id="logo" src=img/logo.png alt="">
+    </header>
+
+    <main id="corps">
+        <img src="img/mdp_oublie.png" alt="">
+        <form action="login.php" method="post">
+            <div class="champs">
+                <label> Nom d'utilisateur :</label>
+                <input type="text" name="name" placeholder="Afficher le nom de l'utilisateur"/>
+            </div>
+            <div class="champs">
+                <label>Question secrète :</label>
+                <input type="text" name="name" placeholder="Afficher La question selon l'utilisateur"/>
+            </div>
+            <div class="champs">
+                <label> Réponse :</label>
+                <input type="text" name="name" placeholder="Entrer votre réponse"/>
+            </div>
+            <div class="champs">
+                <label>Mot de passe :</label>
+                <input type="password" name="password" placeholder="Entre votre mot de passe"/>
+            </div>
+            <input type="submit" value="Valider">
+        </form>
+    </main>
+
+    <footer>
+        <a href="mentions_legales.php">Mentions Légales</a>
+</footer>
+</body>
+</html>

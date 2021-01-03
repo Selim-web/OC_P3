@@ -235,7 +235,7 @@ article > img {
     color: black;
 }
 
-#commentaire {
+#bloc_com {
     width: 90%;
     height: 100%;
     background-color: whitesmoke;
@@ -246,21 +246,22 @@ article > img {
     opacity: 0.95;
 }
 
-.nombre_com_nouveau_com_like_dslike {
+.header_bloc_com {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-#bloc_com {
+#bloc_reaction {
     display: flex;
     align-items: center;
+    margin-right: 10px;
 }
 
 
 #button_commentaire {
-    width: 70%;
-    margin:auto;
+    width: 8em;
+    margin:0px 5px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
     background-color: #989494;
     border: 1px solid #989494;
@@ -278,8 +279,19 @@ article > img {
     color: #989494
 }
 
-#new_com > h3 {
+#bloc_reaction > a > img {
+    width: 2em;
+    height: 2em;
+}
+
+#bloc_reaction > p {
+    font-size: 1.4em;
+    margin: 0 10px;
+}
+
+#dernier_com > h3 {
  text-align: left;
+ margin: 50px 0;
 }
 
 textarea {
@@ -300,4 +312,71 @@ textarea:focus {
 #nouveau_com > input[type="submit"] {
     width: 95%;
     border-radius: 0%;
+}
+
+#dernier_com > article {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    width: 100%;
+}
+
+.header_dernier_com {
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+}
+
+/* CSS pour mobile */
+
+@media only screen and (max-width : 500px) {
+
+    #corps {
+    width: 95%;
+    padding: 1em 0;
+    margin-top: 3em;
+    margin-bottom: 2em;
+    font-size: 0.8em;
+    }
+
+    article {
+    width: 95%;
+    height: auto;
+    margin: 30px auto;
+    padding: 15px 0 0;
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    }
+
+    article > img {
+    height: auto;
+    width: 100%;
+    }
+
+    article > #bande_acteur {
+    padding: 1em  1em ;
+    width: 60%;
+    margin-bottom: 1em;   
+    }
+
+    article > #bande_acteur > p,h3 {
+        width: 100%;
+        text-align: center;  
+    }
+    article > a {
+        width: 100%;
+        margin-top: 1em;
+    }
+
+    .header_bloc_com {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #dernier_com > article {
+        align-items:flex-start;
+    }
+
 }
