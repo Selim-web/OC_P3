@@ -41,7 +41,7 @@
                     $_SESSION['prenom'] = $req_verif['prenom'];
                     $_SESSION['username'] = $req_verif['username'];
 
-                    header('Location : accueil.php');
+                    header('Location: accueil.php');
                     exit;
                     
                 }

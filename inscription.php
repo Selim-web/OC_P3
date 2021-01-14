@@ -20,7 +20,7 @@
             $prenom = htmlspecialchars(trim($prenom)); // on récupère le prénom
             $username = htmlspecialchars(trim($username)); // On récupère le mail
             $password = trim($password); //  On récupère le mot de passe
-            $conf_password = trim($password);  //  On récupère la confirmation du mot de passe
+            $conf_password = trim($conf_password);  //  On récupère la confirmation du mot de passe
             $question = htmlspecialchars(trim($question)); // On récupère la question 
             $reponse = htmlspecialchars(trim($reponse)); // On récupère la reponse 
  
@@ -47,7 +47,9 @@
                 $valid = false;
                 $er_password = "Le mot de passe ne peut pas être vide";
  
-            }elseif($password != $conf_password){
+            }
+            
+            elseif($password != $conf_password){
                 $valid = false;
                 $er_password = "La confirmation du mot de passe ne correspond pas";
             }
@@ -62,7 +64,7 @@
                     (?, ?, ?, ?, ?, ?)'); 
                 $req->execute(array($nom,$prenom,$username,$password_hache, $question, $reponse)); 
                 
-                header('Location: accueil.php');
+                header('Location:connexion.php');
                 exit;
             }
         }

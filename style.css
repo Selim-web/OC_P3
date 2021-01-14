@@ -26,6 +26,29 @@ header {
     background-color: #ea3728;
 }
 
+header > nav {
+    display: flex;
+    height: 3em;
+    width: 12em;
+    margin-right: 20px;
+}
+
+nav > a {
+    display: flex;
+    align-items: center;
+
+}
+
+nav > p {
+    margin-left: 10px;
+}
+
+header > p {
+    margin-left: 0.5em;
+    width: 7em;
+    padding-right: 1em;
+}
+
 footer {
     display: flex;
     justify-content: center;
@@ -309,7 +332,7 @@ textarea:focus {
     border-color: inherit;
 }
 
-#nouveau_com > input[type="submit"] {
+#dernier_com > form > input[type="submit"] {
     width: 95%;
     border-radius: 0%;
 }

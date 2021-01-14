@@ -1,13 +1,27 @@
+<?php
+    session_start();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="utf-8">
-    <title> GBAF - Connexion</title>
+    <title> GBAF</title>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
     <header>
-        <img id="logo" src=img/logo.png alt="">
+        <a href="accueil.php">
+            <img id="logo" src=img/logo.png alt="">
+        </a>
+        <nav>
+            <a href="parametre_compte.php">
+                <img class="icon" src="img/user.png" alt="">
+                <p><?php echo $_SESSION['nom'] .' '. $_SESSION['prenom']; ?></p>
+            </a>
+            <a href="deconnexion.php">
+               <img class="icon" src="img/logout.png" alt=""> 
+            </a>
+        </nav>
     </header>
     <main id="main">
         <div id="presentation">
@@ -29,16 +43,16 @@ C’est aussi un interlocuteur privilégié des pouvoirs publics.
 
         <?php $bdd = new PDO('mysql:host=127.0.0.1;port=8889;dbname=GBAF','root', 'root'); 
        $reponse = $bdd->query('SELECT * FROM acteur');
-       while($donnees = $reponse->fetch())
+       while($acteur = $reponse->fetch())
        {
         ?>  
         <article>
-                <img src="<?php echo $donnees['logo'] ?>" alt=""/> 
+                <img src="<?php echo $acteur['logo'] ?>" alt=""/> 
                 <div id="bande_acteur">
-                   <h3><?php echo $donnees['acteur']; ?></h3>
-                   <p> <?php echo substr ($donnees['descriptions'], 0, 70) . '...'; ?></p>
+                   <h3><?php echo $acteur['acteur']; ?></h3>
+                   <p> <?php echo substr ($acteur['descriptions'], 0, 70) . '...'; ?></p>
                 </div>
-                <a  id="button_suite" href="acteur_page.php?id_acteur=<?php echo $donnees['id_acteur']; ?>">Lire la suite</a>
+                <a  id="button_suite" href="acteur_page.php?id_acteur=<?php echo $acteur['id_acteur']; ?>">Lire la suite</a>
             </article> 
        <?php
        }

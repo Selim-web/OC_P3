@@ -1,3 +1,34 @@
+<?php 
+    session_start();
+    $bdd = new PDO('mysql:host=127.0.0.1;port=8889;dbname=GBAF','root', 'root'); 
+
+
+    if(!empty($_POST)){
+        extract($_POST);
+        $valid = true;
+
+        if(isset($_POST['commentaires_post'])){
+            $text = (String) (trim($text));
+            if(empty($text)) {
+                $valid = false;
+                $er_commentaire = "Merci d'écrire un commentaire avant de valider";
+          
+            }
+            if($valid){
+
+                $requete = $bdd->prepare('INSERT INTO commentaires(id_user, username, id_acteur, commentaires) VALUES (?, ?, ?, ?)');
+                $requete->execute(array($_SESSION['id_user'],$_SESSION['prenom'], $_GET['id_acteur'], $text));
+                
+                header('Location: acteur_page.php?id_acteur=' . $_GET['id_acteur']);
+                exit;
+            }
+        }
+    }
+
+  
+?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,11 +38,18 @@
 </head>
 <body>
     <header>
-        <img id="logo" src=img/logo.png alt="">
+        <a href="accueil.php">
+            <img id="logo" src=img/logo.png alt="">
+        </a>
+        <nav>
+            <a href="deconnexion.php">
+               <img class="icon" src="img/logout.png" alt=""> 
+            </a>
+            <p><?php echo $_SESSION['nom'] .' '. $_SESSION['prenom']; ?></p>
+        </nav>
     </header>
     <main id="main">
         <?php
-        $bdd = new PDO('mysql:host=127.0.0.1;port=8889;dbname=GBAF','root', 'root'); 
         $req = $bdd->prepare('SELECT * FROM acteur WHERE id_acteur = ?');
         $req->execute(array($_GET['id_acteur']));
         $donnees = $req->fetch();
@@ -22,9 +60,14 @@
             <a href="<?php echo $donnees['acteur'] . '.fr' ?>"><br><?php echo $donnees['acteur']; ?></a>
             <p><br> <?php echo $donnees['descriptions']; ?> </p>
         </div>
+        <?php
+        $req = $bdd->prepare('SELECT COUNT(commentaires) AS commentaires_total FROM commentaires WHERE id_acteur = ?');
+        $req->execute(array($_GET['id_acteur']));
+        $commentaire = $req->fetch();
+        ?>
         <div id="bloc_com">
            <div class="header_bloc_com">
-                <h3>1 COMMENTAIRES</h3>
+                <h3><?php echo $commentaire['commentaires_total']; ?> COMMENTAIRES</h3>
                 <div id="bloc_reaction">
                     <a id="button_commentaire" href="#nouveau_com">Nouveau Commentaire</a>
                     <p>1</p>
@@ -37,19 +80,29 @@
                     </a>
                 </div>
             </div>
-            <div id="dernier_com">
-                <article>
-                    <div class="header_dernier_com">
-                        <h4>Selim</h4>
-                        <label>28-12-2020</label>
-                        <p>Super ! Je le recommande. </p>
-                    </div>
-                </article>
+            <?php
+            $req = $bdd->prepare('SELECT * FROM commentaires WHERE id_acteur = ?');
+            $req->execute(array($_GET['id_acteur']));
+            while($commentaire = $req->fetch())
+            {
+            ?>
+                <div id="dernier_com">
+                    <article>
+                        <div class="header_dernier_com">
+                            <h4><?php echo $commentaire['username']; ?> </h4>
+                            <label><?php echo $commentaire['date_creation'];?></label>
+                            <p><?php echo $commentaire ['commentaires']; ?></p>
+                        </div>
+                    </article>
+            <?php
+            }
+                $req->closeCursor();
+             ?>
                 <h3>AJOUTER UN COMMENTAIRE</h3>
-                <form id="nouveau_com" method="POST">
-                    <textarea name="new_com" placeholder="Votre commentaire..."></textarea>
+                <form method="post">
+                    <textarea name="text" placeholder="Votre commentaire..."></textarea>
                     <br>
-                    <input type="submit" value="ENVOYER" name="button_envoyer">
+                    <input name="commentaires_post" type="submit" value="ENVOYER">
                 </form>
             </div>
         </div>
