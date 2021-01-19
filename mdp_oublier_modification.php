@@ -82,7 +82,7 @@
             </div>
             <div class="champs">
                 <label> Réponse :</label>
-                <input type="text" name="reponse" placeholder=" <?php if(isset($er_reponse)) { echo $er_reponse; } else { echo 'Entrer votre reponse'; } ?>"/>
+                <input type="text" name="reponse" placeholder="<?php if(isset($er_reponse)) { echo $er_reponse; } else { echo 'Entrer votre reponse'; } ?>"/>
             </div>
             <div class="champs">
                 <label>Mot de passe :</label>

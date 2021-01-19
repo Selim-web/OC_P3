@@ -20,7 +20,7 @@
                 $er_username = "Merci d'entrer votre username";
             }
 
-            // Requête pour savoir si le username existe déjà 
+            // Requête pour savoir si le username existe en BDD
             $req = $bdd->prepare('SELECT * FROM utilisateurs WHERE username = ?');
             $req->execute(array($username));
             $req_verif = $req->fetch();

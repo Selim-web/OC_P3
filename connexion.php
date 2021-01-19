@@ -73,7 +73,7 @@
         <form method="post">
             <div class="champs">
                 <label>Nom d'utilisateur :</label>
-                <input type="text" name="username" placeholder=<?php if(isset($er_username)) { echo $er_username; } else { echo 'Username'; } ?> />
+                <input type="text" name="username" placeholder="<?php if(isset($er_username)) { echo $er_username; } else { echo 'Username'; } ?> "/>
             </div>
             <div class="champs">
                 <label>Mot de passe :</label>

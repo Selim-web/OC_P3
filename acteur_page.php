@@ -2,6 +2,20 @@
     session_start();
     $bdd = new PDO('mysql:host=127.0.0.1;port=8889;dbname=GBAF','root', 'root'); 
 
+    // Requête pour compter le nombre de like par acteur 
+    $likes = $bdd->prepare('SELECT * FROM likes WHERE id_acteur = ?');
+    $likes->execute(array($_GET['id_acteur']));
+    $likes = $likes->rowCount();
+
+    // Requête pour compter le nombre de dislike par acteur 
+    $dislikes = $bdd->prepare('SELECT * FROM dislikes WHERE id_acteur = ?');
+    $dislikes->execute(array($_GET['id_acteur']));
+    $dislikes = $dislikes->rowCount();
+
+    // Requête pour checker le nombre de commentaire de l'utilisateur
+    $check_commentaire = $bdd->prepare('SELECT * FROM commentaires WHERE id_user = ? AND id_acteur = ?');
+    $check_commentaire->execute(array($_SESSION['id_user'], $_GET['id_acteur']));
+
     if(!empty($_POST)){
         extract($_POST);
         $valid = true;
@@ -13,8 +27,15 @@
                 $er_commentaire = "Merci d'écrire un commentaire avant de valider";
           
             }
+
+            if ($check_commentaire->rowCount() == 1) {
+                $valid = false;
+                $er_commentaire = "Vous avez déjà posté un commentaire à propos de cet acteur";
+            }
+
             if($valid){
 
+                // On insere le commentaire
                 $requete = $bdd->prepare('INSERT INTO commentaires(id_user, username, id_acteur, commentaires) VALUES (?, ?, ?, ?)');
                 $requete->execute(array($_SESSION['id_user'],$_SESSION['prenom'], $_GET['id_acteur'], $text));
                 
@@ -55,7 +76,6 @@
         $req = $bdd->prepare('SELECT * FROM acteur WHERE id_acteur = ?');
         $req->execute(array($_GET['id_acteur']));
         $donnees = $req->fetch();
-        $id = (int) $donnees['id_acteur'];
         ?>
         <div id="acteur_detail">
             <?php echo '<img src= "'. $donnees['logo'] . '"/>'; ?> 
@@ -73,17 +93,18 @@
                 <h3><?php echo $commentaire['commentaires_total']; ?> COMMENTAIRES</h3>
                 <div id="bloc_reaction">
                     <a id="button_commentaire" href="#nouveau_com">Nouveau Commentaire</a>
-                    <p>1</p>
+                    <p><?= $likes ?></p>
                     <a href="like_dislike.php?t=1&id_acteur=<?php echo $_GET['id_acteur']; ?>">
                         <img src="img/like.png" alt="">
                     </a>
-                    <p>1</p>
+                    <p><?= $dislikes ?></p>
                     <a href="like_dislike.php?t=2&id_acteur=<?php echo $_GET['id_acteur']; ?>">
                         <img src="img/dislike.png" alt="">
                     </a>
                 </div>
             </div>
             <?php
+            // Requête pour afficher les derniers commentaires en fonction de l'acteur
             $req = $bdd->prepare('SELECT * FROM commentaires WHERE id_acteur = ?');
             $req->execute(array($_GET['id_acteur']));
             while($commentaire = $req->fetch())
@@ -99,11 +120,11 @@
                     </article>
             <?php
             }
-                $req->closeCursor();
-             ?>
+            $req->closeCursor();
+            ?>
                 <h3>AJOUTER UN COMMENTAIRE</h3>
                 <form method="post">
-                    <textarea name="text" placeholder="Votre commentaire..."></textarea>
+                    <textarea name="text" placeholder="<?php if(isset($er_commentaire)) { echo $er_commentaire; } else { echo 'Votre commentaire...'; } ?>"></textarea>
                     <br>
                     <input name="commentaires_post" type="submit" value="ENVOYER">
                 </form>
