@@ -18,7 +18,7 @@
         if (isset($_POST['inscription'])){
             $nom  = htmlspecialchars(trim($nom)); // On récupère le nom
             $prenom = htmlspecialchars(trim($prenom)); // on récupère le prénom
-            $username = htmlspecialchars(trim($username)); // On récupère le mail
+            $username = htmlspecialchars(trim($username)); // On récupère le nom d'utilisateur 
             $password = trim($password); //  On récupère le mot de passe
             $conf_password = trim($conf_password);  //  On récupère la confirmation du mot de passe
             $question = htmlspecialchars(trim($question)); // On récupère la question 
@@ -30,8 +30,8 @@
                 $er_username = ("Le nom d'utilisateur n'est pas valide");
             }
             
-            else{
-                // On vérifit que le nom d'utilisateur est disponible
+            else{ // On vérifit que le nom d'utilisateur est disponible en BDD 
+                
                 $req = $bdd->prepare('SELECT * FROM utilisateurs WHERE username = ?');
                 $req->execute(array($_POST['username']));
                 $req_username = $req->fetch();
@@ -78,7 +78,7 @@
 <head>
     <meta charset="utf-8">
     <title> GBAF</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
     <header>

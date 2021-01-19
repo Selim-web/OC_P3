@@ -1,12 +1,15 @@
 <?php
     session_start();
+    $bdd = new PDO('mysql:host=127.0.0.1;port=8889;dbname=GBAF','root', 'root'); 
+    
+    
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="utf-8">
     <title> GBAF</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
     <header>
@@ -41,7 +44,7 @@ C’est aussi un interlocuteur privilégié des pouvoirs publics.
                 Comme de nombreux autres métiers, la finance se trouve confrontée à l’apparition de nouveaux acteurs, de nouveaux modes de distribution, de nouveaux comportements de la part des clients et de nouveaux business models. <br> Si toutes ses activités sont affectées, ce sont les activités bancaires traditionnelles, celles de prêts, de dépôts et de paiement, qui sont toutefois les plus impactées par ce phénomène en raison de la mise en place des nouvelles régulations et de l’émergence des FinTech. Les banques disposent d’atouts importants pour faire face à ces évolutions, elles devront toutefois repenser en profondeur leurs modèles opérationnels.
             </p> 
 
-        <?php $bdd = new PDO('mysql:host=127.0.0.1;port=8889;dbname=GBAF','root', 'root'); 
+       <?php
        $reponse = $bdd->query('SELECT * FROM acteur');
        while($acteur = $reponse->fetch())
        {

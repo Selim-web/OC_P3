@@ -41,8 +41,8 @@
 <html lang="fr">
 <head>
     <meta charset="utf-8">
-    <title> GBAF - Connexion</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <title> GBAF</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
     <header>

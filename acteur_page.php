@@ -2,7 +2,6 @@
     session_start();
     $bdd = new PDO('mysql:host=127.0.0.1;port=8889;dbname=GBAF','root', 'root'); 
 
-
     if(!empty($_POST)){
         extract($_POST);
         $valid = true;
@@ -34,7 +33,7 @@
 <head>
     <meta charset="utf-8">
     <title> GBAF</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
     <header>
@@ -42,10 +41,13 @@
             <img id="logo" src=img/logo.png alt="">
         </a>
         <nav>
+            <a href="parametre_compte.php">
+                <img class="icon" src="img/user.png" alt="">
+                <p><?php echo $_SESSION['nom'] .' '. $_SESSION['prenom']; ?></p>
+            </a>
             <a href="deconnexion.php">
                <img class="icon" src="img/logout.png" alt=""> 
             </a>
-            <p><?php echo $_SESSION['nom'] .' '. $_SESSION['prenom']; ?></p>
         </nav>
     </header>
     <main id="main">
@@ -53,6 +55,7 @@
         $req = $bdd->prepare('SELECT * FROM acteur WHERE id_acteur = ?');
         $req->execute(array($_GET['id_acteur']));
         $donnees = $req->fetch();
+        $id = (int) $donnees['id_acteur'];
         ?>
         <div id="acteur_detail">
             <?php echo '<img src= "'. $donnees['logo'] . '"/>'; ?> 
@@ -71,11 +74,11 @@
                 <div id="bloc_reaction">
                     <a id="button_commentaire" href="#nouveau_com">Nouveau Commentaire</a>
                     <p>1</p>
-                    <a href="like.php">
+                    <a href="like_dislike.php?t=1&id_acteur=<?php echo $_GET['id_acteur']; ?>">
                         <img src="img/like.png" alt="">
                     </a>
                     <p>1</p>
-                    <a href="dislike.php">
+                    <a href="like_dislike.php?t=2&id_acteur=<?php echo $_GET['id_acteur']; ?>">
                         <img src="img/dislike.png" alt="">
                     </a>
                 </div>
