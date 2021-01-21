@@ -1,6 +1,6 @@
 <?php
     session_start();
-    $bdd = new PDO('mysql:host=127.0.0.1;port=8889;dbname=GBAF','root', 'root');
+    $bdd = new PDO('mysql:host=localhost;port=3306;dbname=openclassrooms_p3.bouhassatine-selim.fr_2020','SELIMP3_ADMIN', '-BddSelim2020!-');
 
     // S'il n'y a pas de session alors on retourne sur la page de connexion 
     if (!isset($_SESSION['id_user'])){
@@ -25,23 +25,33 @@
             $question = htmlspecialchars(trim($question)); // On récupère la question 
             $reponse = htmlspecialchars(trim($reponse)); // On récupère la reponse 
             
-            // Requete pour verifier si le nom d'utilisateur entré est disponible en BDD
-            $req = $bdd->prepare('SELECT * FROM utilisateurs WHERE username = ?');
-            $req->execute(array($username));
-            $req_username = $req->fetch();
-
-            if($req_username['username'] != "") {
-                $valid = false;
-                $er_username = "Ce nom d'utilisateur existe déjà";
-            
+            if($username == $_SESSION['username']) {
+                $valid = true;
             }
 
+            else {
+
+                // Requete pour verifier si le nom d'utilisateur entré est disponible en BDD
+                $req = $bdd->prepare('SELECT * FROM utilisateurs WHERE username = ?');
+                $req->execute(array($username));
+                $req_username = $req->fetch();
+
+                if($req_username['username'] != "") {
+                    $valid = false;
+                    $er_username = "Ce nom d'utilisateur existe déjà";
+                
+                }
+            }
+            
             if($valid) {
                 
                 // On update l'utilisateur 
                 $nouveau_para = $bdd->prepare('UPDATE utilisateurs SET nom = ?, prenom = ?, username = ?, question = ?, reponse = ?  WHERE id_user = ?');
                 $nouveau_para->execute(array($nom, $prenom, $username, $question, $reponse, $_SESSION['id_user']));
-                header('Location:accueil.php');
+                $_SESSION['prenom'] = $prenom;
+                $_SESSION['nom'] = $nom;
+                $_SESSION['username'] = $username;
+                header('Location:index.php');
 
             }
 
@@ -58,7 +68,7 @@
 </head>
 <body>
     <header>
-        <a href="accueil.php">
+        <a href="index.php">
             <img id="logo" src=img/logo.png alt="">
         </a>
         <nav>

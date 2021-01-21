@@ -1,10 +1,10 @@
 <?php
     session_start();
-    $bdd = new PDO('mysql:host=127.0.0.1;port=8889;dbname=GBAF','root', 'root');
+    $bdd = new PDO('mysql:host=localhost;port=3306;dbname=openclassrooms_p3.bouhassatine-selim.fr_2020','SELIMP3_ADMIN', '-BddSelim2020!-');
 
     // S'il y a une session alors on ne retourne plus sur cette page  
     if (isset($_SESSION['id_user'])){
-        header('Location: accueil.php');
+        header('Location: index.php');
         exit;
     }
 

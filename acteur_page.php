@@ -1,7 +1,11 @@
 <?php 
     session_start();
-    $bdd = new PDO('mysql:host=127.0.0.1;port=8889;dbname=GBAF','root', 'root'); 
+    $bdd = new PDO('mysql:host=localhost;port=3306;dbname=openclassrooms_p3.bouhassatine-selim.fr_2020','SELIMP3_ADMIN', '-BddSelim2020!-'); 
 
+    if (!isset($_SESSION['id_user'])){
+        header('Location: connexion.php');
+        exit;
+    }
     // Requête pour compter le nombre de like par acteur 
     $likes = $bdd->prepare('SELECT * FROM likes WHERE id_acteur = ?');
     $likes->execute(array($_GET['id_acteur']));
@@ -36,8 +40,8 @@
             if($valid){
 
                 // On insere le commentaire
-                $requete = $bdd->prepare('INSERT INTO commentaires(id_user, username, id_acteur, commentaires) VALUES (?, ?, ?, ?)');
-                $requete->execute(array($_SESSION['id_user'],$_SESSION['prenom'], $_GET['id_acteur'], $text));
+                $requete = $bdd->prepare('INSERT INTO commentaires(id_user, id_acteur, commentaires) VALUES (?, ?, ?)');
+                $requete->execute(array($_SESSION['id_user'], $_GET['id_acteur'], $text));
                 
                 header('Location: acteur_page.php?id_acteur=' . $_GET['id_acteur']);
                 exit;
@@ -58,7 +62,7 @@
 </head>
 <body>
     <header>
-        <a href="accueil.php">
+        <a href="index.php">
             <img id="logo" src=img/logo.png alt="">
         </a>
         <nav>
@@ -94,11 +98,11 @@
                 <div id="bloc_reaction">
                     <a id="button_commentaire" href="#nouveau_com">Nouveau Commentaire</a>
                     <p><?= $likes ?></p>
-                    <a href="like_dislike.php?t=1&id_acteur=<?php echo $_GET['id_acteur']; ?>">
+                    <a href="like_dislike.php?type=1&id_acteur=<?php echo $_GET['id_acteur']; ?>">
                         <img src="img/like.png" alt="">
                     </a>
                     <p><?= $dislikes ?></p>
-                    <a href="like_dislike.php?t=2&id_acteur=<?php echo $_GET['id_acteur']; ?>">
+                    <a href="like_dislike.php?type=2&id_acteur=<?php echo $_GET['id_acteur']; ?>">
                         <img src="img/dislike.png" alt="">
                     </a>
                 </div>
@@ -109,11 +113,14 @@
             $req->execute(array($_GET['id_acteur']));
             while($commentaire = $req->fetch())
             {
+                $req_user= $bdd->prepare('SELECT username FROM utilisateurs WHERE id_user = ?');
+                $req_user->execute(array($commentaire['id_user']));
+                $user=$req_user->fetch();
             ?>
                 <div id="dernier_com">
                     <article>
                         <div class="header_dernier_com">
-                            <h4><?php echo $commentaire['username']; ?> </h4>
+                            <h4><?php echo $user['username']; ?> </h4>
                             <label><?php echo $commentaire['date_creation'];?></label>
                             <p><?php echo $commentaire ['commentaires']; ?></p>
                         </div>
