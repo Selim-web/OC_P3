@@ -26,6 +26,28 @@ function bddConnect()
 
 }
 
+function getUser($username) {
+
+    $bdd = bddConnect();
+
+    $req = $bdd->prepare('SELECT * FROM utilisateurs WHERE username = ?');
+    $req->execute(array($username));
+    $req_verif = $req->fetch();
+
+    return $req_verif;
+}
+
+function getUserById($id_user) {
+
+    $bdd = bddConnect();
+
+    $req = $bdd->prepare('SELECT * FROM utilisateurs WHERE id_user = ?');
+    $req->execute(array($id_user));
+    $req_donnees = $req->fetch();
+
+    return $req_donnees;
+}
+
 function getActeur()
 {
    

@@ -1,14 +1,9 @@
 <?php
-session_start();
 
-if (!isset($_SESSION['id_user'])){
-    header('Location: connexion.php');
-    exit;
-}
+
 
 // Ajouter Variable globale pour le modele 
 
-// Ajouter fonction connexion 
 
 // Ajouter fonction inscription 
 
@@ -17,6 +12,39 @@ if (!isset($_SESSION['id_user'])){
 // Ajouter fonction deconnexion 
 
 // Ajouter fonction parametre du compte avec modif 
+function PageConnexion()
+{
+    include('connexion.php');
+}
+
+function Connexion($username, $password)
+{
+    require('model/modele.php');
+
+    $username = htmlspecialchars(trim($username));
+    $password = trim($password);
+    $user = getUser($username);
+
+    if(password_verify($password, $user['password'])) {
+        $_SESSION['id_user'] = $user['id_user'];
+        $_SESSION['nom'] = $user['nom'];
+        $_SESSION['prenom'] = $user['prenom'];
+        $_SESSION['username'] = $user['username'];
+
+        header('Location: index.php?action=PageHome');
+        exit; 
+    }
+    else {
+        $er_verif = "Le nom d'utilisateur ou le mot de passe est incorrecte";
+    }
+
+    require('view/connexion.php');
+}
+
+function PageInscription()
+{
+    include('inscription.php');
+}
 
 
 
@@ -45,15 +73,6 @@ function ListActeurDetail()
 
 }
 
-function NbrCommentaireByUser($id_user, $id_acteur)
-{
-    require('model/modele.php');
-
-    $nbr_commentaire_by_user = getNbrCommentaireByUser($id_user, $id_acteur);
-
-    require('view/ActeurDetail.php');
-}
-
 function PostCommentaire($id_user,$id_acteur,$username,$text) 
 {
     require('model/modele.php');
@@ -64,6 +83,15 @@ function PostCommentaire($id_user,$id_acteur,$username,$text)
     
     require('view/ActeurDetail.php');
 
+}
+
+function NbrCommentaireByUser($id_user, $id_acteur)
+{
+    require('model/modele.php');
+
+    $nbr_commentaire_by_user = getNbrCommentaireByUser($id_user, $id_acteur);
+
+    require('view/ActeurDetail.php');
 }
 
 function toggle_like($id_acteur,$id_user) {
