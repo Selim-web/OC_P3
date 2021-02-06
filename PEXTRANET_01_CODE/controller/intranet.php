@@ -38,30 +38,71 @@ function ListActeurDetail()
     $req_commentaire = getCommentaire($_GET['id_acteur']);
     $nbr_commentaire = getNbrCommentaireByActeur($_GET['id_acteur']);
     
+    $likes = getNbrLikeByActeur($_GET['id_acteur']);
+    $dislikes = getNbrDislikeByActeur($_GET['id_acteur']);
+    
     require('view/ActeurDetail.php');
 
+}
+
+function NbrCommentaireByUser($id_user, $id_acteur)
+{
+    require('model/modele.php');
+
+    $nbr_commentaire_by_user = getNbrCommentaireByUser($id_user, $id_acteur);
+
+    require('view/ActeurDetail.php');
 }
 
 function PostCommentaire($id_user,$id_acteur,$username,$text) 
 {
     require('model/modele.php');
 
-    if(empty($text)) 
-    {
-        $er_commentaire = "Merci d'écrire un commentaire avant de valider";
-    }
+    $new_commentaire = addCommentaire($id_user,$id_acteur,$username,$text);
 
-    if(getNbrCommentaireByUser($id_user,$id_acteur) == 1)
-    {
-        $er_commentaire = "Vous avez déjà posté un commentaire à propos de cet acteur";
-    }
-    else {
-        $new_commentaire = addCommentaire($id_user,$id_acteur,$username,$text);
-    }
     header('Location: index.php?action=PageActeur&id_acteur='. $id_acteur);
+    
     require('view/ActeurDetail.php');
 
 }
+
+function toggle_like($id_acteur,$id_user) {
+
+    require('model/modele.php');
+
+    $checklike = check_like($id_acteur, $id_user);
+
+    delete_dislike($id_acteur,$id_user);
+    if($checklike == 1) {
+        delete_like($id_acteur,$id_user);
+    }
+    else {
+        insert_like($id_acteur,$id_user);
+    }
+    header('Location:index.php?action=PageActeur&id_acteur=' . $id_acteur);
+
+    require('view/ActeurDetail.php');
+}
+
+function toggle_dislike($id_acteur,$id_user) {
+
+    require('model/modele.php');
+
+    $checkdislike = check_dislike($id_acteur, $id_user);
+
+    delete_like($id_acteur,$id_user);
+    if($checkdislike == 1) {
+        delete_dislike($id_acteur,$id_user);
+    }
+    else {
+        insert_dislike($id_acteur,$id_user);
+    }
+    
+    header('Location:index.php?action=PageActeur&id_acteur=' . $id_acteur);
+
+    require('view/ActeurDetail.php');
+}
+
 
 
 
