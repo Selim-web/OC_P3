@@ -17,7 +17,13 @@ if(isset($_GET['action']))
         }
         else if($_GET['action'] == 'Inscription') {
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                Inscription();
+                Inscription( $_POST['nom'],
+                $_POST['prenom'],
+                $_POST['username'],
+                $_POST['password'],
+                $_POST['conf_password'],
+                $_POST['question'],
+                $_POST['reponse']);
             }
             else {
                 PageInscription();
@@ -56,6 +62,14 @@ if(isset($_GET['action']))
                 else if($_GET['type'] == 2) {
                     toggle_dislike($_GET['id_acteur'], $_SESSION['id_user']);
                 }
+            }
+        }
+        else if($_GET['action'] == 'deconnexion') {
+            Deconnexion();
+        }
+        else if($_GET['action'] == 'parametre') {
+            if($_SERVER['REQUEST_METHOD'] == 'POST') {
+                Parametre();
             }
         }
     }      

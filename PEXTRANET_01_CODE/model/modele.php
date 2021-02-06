@@ -26,6 +26,23 @@ function bddConnect()
 
 }
 
+function InsertUser($nom,$prenom,$username,$password_hache, $question, $reponse)
+{
+    $bdd = bddConnect();
+
+    $req = $bdd->prepare('INSERT INTO utilisateurs (nom, prenom, username, password, question, reponse) VALUES (?, ?, ?, ?, ?, ?)'); 
+    $req->execute(array($nom,$prenom,$username,$password_hache, $question, $reponse)); 
+}
+
+function UpdateUser($nom, $prenom, $username, $question, $reponse, $id_user) 
+{
+    $bdd = bddConnect();
+
+    $nouveau_para = $bdd->prepare('UPDATE utilisateurs SET nom = ?, prenom = ?, username = ?, question = ?, reponse = ?  WHERE id_user = ?');
+    $nouveau_para->execute(array($nom, $prenom, $username, $question, $reponse, $id_user));
+    
+
+}
 function getUser($username) {
 
     $bdd = bddConnect();

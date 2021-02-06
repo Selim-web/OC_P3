@@ -16,7 +16,7 @@
                 <img class="icon" src="public/img/user.png" alt="">
                 <p><?= $_SESSION['nom'] .' '. $_SESSION['prenom']; ?></p>
             </a>
-            <a href="deconnexion.php">
+            <a href="index.php?action=deconnexion">
                <img class="icon" src="public/img/logout.png" alt=""> 
             </a>
         </nav>
