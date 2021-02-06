@@ -34,11 +34,11 @@
                 <div id="bloc_reaction">
                     <a id="button_commentaire" href="#nouveau_com">Nouveau Commentaire</a>
                     <p><?= $likes ?></p>
-                    <a href="like_dislike.php?type=1&id_acteur=<?php echo $_GET['id_acteur']; ?>">
+                    <a href="index.php?action=addLike/Dislike&type=1&id_acteur=<?php echo $_GET['id_acteur']; ?>">
                         <img src="public/img/like.png" alt="">
                     </a>
                     <p><?= $dislikes ?></p>
-                    <a href="like_dislike.php?type=2&id_acteur=<?php echo $_GET['id_acteur']; ?>">
+                    <a href="index.php?action=addLike/Dislike&type=2&id_acteur=<?php echo $_GET['id_acteur']; ?>">
                         <img src="public/img/dislike.png" alt="">
                     </a>
                 </div>
@@ -60,7 +60,7 @@
             $req_commentaire->closeCursor();
             ?>
                 <h3>AJOUTER UN COMMENTAIRE</h3>
-                <form action="index.php?action=addCommentaire&id_acteur=<?= $_GET['id_acteur']; ?>" id="nouveau_com" method="post">
+                <form action="index.php?action=addCommentaire&amp;id_acteur=<?= $_GET['id_acteur']; ?>" id="nouveau_com" method="post">
                     <textarea name="text" placeholder="<?php if(isset($er_commentaire)) { echo $er_commentaire; } else { echo 'Votre commentaire...'; } ?>"></textarea>
                     <br>
                     <input name="commentaires_post" type="submit" value="ENVOYER">
