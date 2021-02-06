@@ -17,7 +17,7 @@ if(isset($_GET['action']))
         }
         else if($_GET['action'] == 'Inscription') {
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                Inscription( $_POST['nom'],
+                Inscription($_POST['nom'],
                 $_POST['prenom'],
                 $_POST['username'],
                 $_POST['password'],
@@ -64,13 +64,21 @@ if(isset($_GET['action']))
                 }
             }
         }
-        else if($_GET['action'] == 'deconnexion') {
-            Deconnexion();
-        }
         else if($_GET['action'] == 'parametre') {
             if($_SERVER['REQUEST_METHOD'] == 'POST') {
-                Parametre();
+                Parametre($_POST['nom'],
+                $_POST['prenom'],
+                $_POST['username'],
+                $_POST['question'],
+                $_POST['reponse'],
+                $_SESSION['id_user']);
             }
+            else {
+                PageParametre($_SESSION['id_user']);
+            }
+        }
+        else if($_GET['action'] == 'deconnexion') {
+            Deconnexion();
         }
     }      
 }

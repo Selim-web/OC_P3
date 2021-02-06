@@ -41,7 +41,6 @@ function UpdateUser($nom, $prenom, $username, $question, $reponse, $id_user)
     $nouveau_para = $bdd->prepare('UPDATE utilisateurs SET nom = ?, prenom = ?, username = ?, question = ?, reponse = ?  WHERE id_user = ?');
     $nouveau_para->execute(array($nom, $prenom, $username, $question, $reponse, $id_user));
     
-
 }
 function getUser($username) {
 

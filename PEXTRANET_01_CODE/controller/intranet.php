@@ -90,7 +90,7 @@ function Inscription($nom, $prenom, $username, $password, $conf_password, $quest
     require('view/inscription.php');
 }
 
-function PageParametre()
+function PageParametre($id_user)
 {
     require('model/modele.php');
 
@@ -99,7 +99,7 @@ function PageParametre()
     require('view/parametre_compte.php');
 }
 
-function Parametre($nom, $prenom, $username, $question, $reponse) 
+function Parametre($nom, $prenom, $username, $question, $reponse, $id_user) 
 {
     require('model/modele.php');
 
@@ -118,7 +118,7 @@ function Parametre($nom, $prenom, $username, $question, $reponse)
         $er_username = "Ce nom d'utilisateur existe déjà";
     }
     if($valid) {
-        UpdateUser($nom,$prenom,$username, $question, $reponse);
+        UpdateUser($nom,$prenom,$username, $question, $reponse, $id_user);
         $_SESSION['prenom'] = $prenom;
         $_SESSION['nom'] = $nom;
         $_SESSION['username'] = $username;

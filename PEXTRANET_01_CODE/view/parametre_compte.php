@@ -1,63 +1,3 @@
-<?php
-    session_start();
-    $bdd = new PDO('mysql:host=127.0.0.1;port=8889;dbname=GBAF','root', 'root');
-
-    // S'il n'y a pas de session alors on retourne sur la page de connexion 
-    if (!isset($_SESSION['id_user'])){
-        header('Location: connexion.php');
-        exit;
-    }
-
-    // Requête pour récuperer les infos de l'utilisateur 
-    $req = $bdd->prepare('SELECT * FROM utilisateurs WHERE id_user = ?');
-    $req->execute(array($_SESSION['id_user']));
-    $req_donnees = $req->fetch();
-
-    if(!empty($_POST)){
-        extract($_POST);
-        $valid = true;
-
-        if (isset($_POST['parametre_compte'])){
-
-            $nom  = htmlspecialchars(trim($nom)); // On récupère le nom
-            $prenom = htmlspecialchars(trim($prenom)); // on récupère le prénom
-            $username = htmlspecialchars(trim($username)); // On récupère le nom d'utilisateur
-            $question = htmlspecialchars(trim($question)); // On récupère la question 
-            $reponse = htmlspecialchars(trim($reponse)); // On récupère la reponse 
-            
-            if($username == $_SESSION['username']) {
-                $valid = true;
-            }
-
-            else {
-
-                // Requete pour verifier si le nom d'utilisateur entré est disponible en BDD
-                $req = $bdd->prepare('SELECT * FROM utilisateurs WHERE username = ?');
-                $req->execute(array($username));
-                $req_username = $req->fetch();
-
-                if($req_username['username'] != "") {
-                    $valid = false;
-                    $er_username = "Ce nom d'utilisateur existe déjà";
-                
-                }
-            }
-            
-            if($valid) {
-                
-                // On update l'utilisateur 
-                $nouveau_para = $bdd->prepare('UPDATE utilisateurs SET nom = ?, prenom = ?, username = ?, question = ?, reponse = ?  WHERE id_user = ?');
-                $nouveau_para->execute(array($nom, $prenom, $username, $question, $reponse, $_SESSION['id_user']));
-                $_SESSION['prenom'] = $prenom;
-                $_SESSION['nom'] = $nom;
-                $_SESSION['username'] = $username;
-                header('Location:index.php');
-
-            }
-
-        }
-    }        
-?>        
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -68,15 +8,16 @@
 </head>
 <body>
     <header>
+    <header>
         <a href="index.php">
             <img id="logo" src=public/img/logo.png alt="">
         </a>
         <nav>
-            <a href="parametre_compte.php">
+            <a href="index.php?action=parametre">
                 <img class="icon" src="public/img/user.png" alt="">
-                <p><?php echo $_SESSION['nom'] .' '. $_SESSION['prenom']; ?></p>
+                <p><?= $_SESSION['nom'] .' '. $_SESSION['prenom']; ?></p>
             </a>
-            <a href="deconnexion.php">
+            <a href="index.php?action=deconnexion">
                <img class="icon" src="public/img/logout.png" alt=""> 
             </a>
         </nav>
@@ -84,7 +25,7 @@
     <main id="corps">
         <img src="public/img/login.png" alt="">
         <h2>MON COMPTE</h2>
-        <form method="post">
+        <form method="post" novalidate>
             <div class="champs">
                 <label> Nom :</label>
                 <input type="text" name="nom" value="<?php echo $req_donnees['nom'] ?>"/>

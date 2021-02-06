@@ -12,7 +12,7 @@
             <img id="logo" src=public/img/logo.png alt="">
         </a>
         <nav>
-            <a href="parametre_compte.php">
+            <a href="index.php?action=parametre">
                 <img class="icon" src="public/img/user.png" alt="">
                 <p><?= $_SESSION['nom'] .' '. $_SESSION['prenom']; ?></p>
             </a>

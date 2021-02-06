@@ -8,13 +8,14 @@
 </head>
 <body>
     <header>
+    <header>
         <a href="index.php">
             <img id="logo" src=public/img/logo.png alt="">
         </a>
         <nav>
-            <a href="parametre_compte.php">
+            <a href="index.php?action=parametre">
                 <img class="icon" src="public/img/user.png" alt="">
-                <p><?php echo $_SESSION['nom'] .' '. $_SESSION['prenom']; ?></p>
+                <p><?= $_SESSION['nom'] .' '. $_SESSION['prenom']; ?></p>
             </a>
             <a href="index.php?action=deconnexion">
                <img class="icon" src="public/img/logout.png" alt=""> 
