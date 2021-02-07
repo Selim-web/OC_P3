@@ -8,7 +8,6 @@
 </head>
 <body>
     <header>
-    <header>
         <a href="index.php">
             <img id="logo" src=public/img/logo.png alt="">
         </a>

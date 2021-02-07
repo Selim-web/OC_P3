@@ -42,6 +42,17 @@ function UpdateUser($nom, $prenom, $username, $question, $reponse, $id_user)
     $nouveau_para->execute(array($nom, $prenom, $username, $question, $reponse, $id_user));
     
 }
+
+function UpdatePassword($password,$username)
+{
+    $bdd = bddConnect();
+
+    $new_mdp = $bdd->prepare('UPDATE utilisateurs SET password = ? WHERE username = ?');
+    $new_mdp->execute(array($password,$username));
+    
+}
+
+
 function getUser($username) {
 
     $bdd = bddConnect();

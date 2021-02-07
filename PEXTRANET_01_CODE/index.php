@@ -29,6 +29,27 @@ if(isset($_GET['action']))
                 PageInscription();
             }
         }
+        elseif($_GET['action'] == 'MdpOublier') {
+            if($_SERVER['REQUEST_METHOD'] == 'POST') {
+                MdpOublier($_POST['username']);
+            }
+            else {
+                PageMdpOublier();
+            }
+        }
+        elseif($_GET['action'] == 'ModificationMdp') {
+            if($_GET['username']) {
+                if($_SERVER['REQUEST_METHOD'] == 'POST') {
+                    MdpOublierModification($_POST['reponse'], 
+                    $_POST['password'], 
+                    $_POST['conf_password'], 
+                    $_GET['username']);
+                }
+                else {
+                    PageMdpModification($_GET['username']);
+                }
+            }
+        }
     }
     else {
         if($_GET['action'] == 'PageHome') {
@@ -45,8 +66,8 @@ if(isset($_GET['action']))
         else if($_GET['action'] == 'addCommentaire') {
             if(isset($_GET['id_acteur'])) {
                 if($_POST['text'] != "") {
-                PostCommentaire($_SESSION['id_user'], $_GET['id_acteur'], 
-                $_SESSION['username'], $_POST['text']);
+                    PostCommentaire($_SESSION['id_user'], $_GET['id_acteur'], 
+                    $_SESSION['username'], $_POST['text']);
                 } 
                 else {
                 header('Location: index.php?action=PageActeur&id_acteur='. $_GET['id_acteur']);

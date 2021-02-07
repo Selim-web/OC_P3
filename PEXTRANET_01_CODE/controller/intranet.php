@@ -1,17 +1,7 @@
 <?php
 
-
-
 // Ajouter Variable globale pour le modele 
 
-
-// Ajouter fonction inscription 
-
-// Ajouter fonction Mdp oublier 
-
-// Ajouter fonction deconnexion 
-
-// Ajouter fonction parametre du compte avec modif 
 function PageConnexion()
 {
     include('view/connexion.php');
@@ -42,12 +32,81 @@ function Connexion($username, $password)
     require('view/connexion.php');
 }
 
+function PageMdpOublier()
+{
+    include('view/mdp_oublier.php');
+}
+
+function MdpOublier($username)
+{
+    require('model/modele.php');
+
+    $username = htmlspecialchars(trim($username));
+    $user = getUser($username);
+
+
+    if($user){
+        $user_verify = $user['username'];
+        header('Location: index.php?action=ModificationMdp&username='. $user_verify);
+       
+    }
+    else {
+        $er_verif = "Le nom d'utilisateur est incorrect"; 
+       
+    }
+
+    require('view/mdp_oublier.php');
+}
+
+function PageMdpModification($username)
+{
+    require('model/modele.php');
+
+    $req_verif = getUser($username);
+
+    require('view/mdp_oublier_modification.php');
+
+}
+
+function MdpOublierModification($reponse, $password, $conf_password, $username)
+{
+    require('model/modele.php');
+
+    $reponse = htmlspecialchars(trim($reponse));
+    $password = trim($password);
+    $conf_password = trim($conf_password);
+    $user = getUser($username);
+    $valid = true;
+
+    if($reponse != $user['reponse']) {
+        $valid = false;
+        $er_reponse = "Ce n'est pas la bonne réponse";
+    }
+    if(empty($password)) {
+        $valid = false;
+        $er_password = "Le mot de passe ne peut pas être vide";
+
+    }
+    elseif($password != $conf_password){
+        $valid = false;
+        $er_password = "La confirmation du mot de passe ne correspond pas";
+    }
+    if($valid) {
+        $password_hache = password_hash($password, PASSWORD_DEFAULT);
+        UpdatePassword($password_hache,$username);
+        header('Location: index.php');
+        exit;
+        
+    }
+    require('view/mdp_oublier_modification.php');
+}
+
 function Deconnexion()
 {
     session_start();
     session_destroy();
     header('Location: index.php');
-    exit();
+    exit;
 }
 
 function PageInscription()
@@ -82,7 +141,7 @@ function Inscription($nom, $prenom, $username, $password, $conf_password, $quest
         $er_password = "La confirmation du mot de passe ne correspond pas";
     }
     if($valid) {
-        $password_hache = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        $password_hache = password_hash($password, PASSWORD_DEFAULT);
         InsertUser($nom,$prenom,$username,$password_hache, $question, $reponse);
         header('Location:index.php');
         exit;
@@ -105,17 +164,23 @@ function Parametre($nom, $prenom, $username, $question, $reponse, $id_user)
 
     $nom  = htmlspecialchars(trim($nom));
     $prenom = htmlspecialchars(trim($prenom));
-    $username = htmlspecialchars(trim($username)); 
+    $usernamePost = htmlspecialchars(trim($username)); 
     $question = htmlspecialchars(trim($question));
     $reponse = htmlspecialchars(trim($reponse));
 
+    $testUsername = getUser($usernamePost);
+
     $valid = true;    
-    if($username == $_SESSION['username']) {
+    if($usernamePost == $_SESSION['username']) {
+        echo $_SESSION['username'];
         $valid = true;
+
     }
-    if(getUser($username) <> "") {
-        $valid = false;
-        $er_username = "Ce nom d'utilisateur existe déjà";
+    else {
+        if($testUsername['username'] != "") {
+            $valid = false;
+            $er_username = "Ce nom d'utilisateur existe déjà";
+        }
     }
     if($valid) {
         UpdateUser($nom,$prenom,$username, $question, $reponse, $id_user);
