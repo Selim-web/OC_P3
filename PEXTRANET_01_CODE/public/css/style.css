@@ -1,5 +1,5 @@
 html { 
-    background-image: url(PEXTRANET_01_CODE/public/img/background_body.jpg) no-repeat center center fixed; 
+    background-image: url(../img/background_body.png) no-repeat center center fixed; 
     background-size: cover;
   }
 
@@ -13,7 +13,9 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background: url(public/img/background_body.jpg);
+    background-image: url(../img/background_body.png);
+    background-image: no-repeat center center fixed;
+    background-size: cover;
 }
 
 header {

@@ -180,6 +180,7 @@ function Parametre($nom, $prenom, $username, $question, $reponse, $id_user)
         if($testUsername['username'] != "") {
             $valid = false;
             $er_username = "Ce nom d'utilisateur existe déjà";
+           // PageParametre($id_user);
         }
     }
     if($valid) {

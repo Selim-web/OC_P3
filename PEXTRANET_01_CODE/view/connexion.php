@@ -22,7 +22,7 @@
                 <input type="password" name="password" placeholder="********"/>
             </div>
                 <p><?php if(isset($er_verif)) { echo $er_verif; } ?></p>
-                <a href="mdp_oublier.php">Mot de passe oublié</a>
+                <a href="index.php?action=MdpOublier">Mot de passe oublié</a>
                 <br>
                 <input type="submit" name="connexion" value="Connexion">
         </form>

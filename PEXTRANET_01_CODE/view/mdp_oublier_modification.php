@@ -1,5 +1,5 @@
 <?php
-    session_start();
+  /*  session_start();
     $bdd = new PDO('mysql:host=127.0.0.1;port=8889;dbname=GBAF','root', 'root');
 
     // S'il y a une session alors on ne retourne plus sur cette page  
@@ -53,7 +53,7 @@
             }
 
         }
-    }        
+    }  */      
 ?>        
 <!DOCTYPE html>
 <html lang="fr">
@@ -72,11 +72,11 @@
         <form method="post">
             <div class="champs">
                 <label> Nom d'utilisateur :</label>
-                <input type="text" name="username" value="<?php echo $username ?>"/>
+                <input type="text" name="username" value="<?php echo $req_verif['username'] ?>"/>
             </div>
             <div class="champs">
                 <label>Question secrète :</label>
-                <input type="text" name="question" value="<?php echo $question ?>"/>
+                <input type="text" name="question" value="<?php echo $req_verif['question'] ?>"/>
             </div>
             <div class="champs">
                 <label> Réponse :</label>
