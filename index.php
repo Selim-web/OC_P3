@@ -2,8 +2,6 @@
 session_start();
 require('controller/intranet.php');
 
-
-
 if(isset($_GET['action'])) 
 {
     if (!isset($_SESSION['username'])) {

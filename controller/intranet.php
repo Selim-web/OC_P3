@@ -1,6 +1,10 @@
 <?php
 
-// Ajouter Variable globale pour le modele 
+// Chargement des classes
+require_once('model/ActeurManager.php');
+require_once('model/VoteManager.php');
+require_once('model/UserManager.php');
+require_once('model/CommentManager.php');
 
 function PageConnexion()
 {
@@ -9,11 +13,11 @@ function PageConnexion()
 
 function Connexion($username, $password)
 {
-    require('model/modele.php');
+    $userManager = new UserManager();
 
     $username = htmlspecialchars(trim($username));
     $password = trim($password);
-    $user = getUser($username);
+    $user = $userManager->getUser($username);
     $isPasswordCorrect = password_verify($password, $user['password']);
 
     if($isPasswordCorrect) {
@@ -39,10 +43,10 @@ function PageMdpOublier()
 
 function MdpOublier($username)
 {
-    require('model/modele.php');
+    $userManager = new UserManager();
 
     $username = htmlspecialchars(trim($username));
-    $user = getUser($username);
+    $user = $userManager->getUser($username);
 
 
     if($user){
@@ -60,9 +64,9 @@ function MdpOublier($username)
 
 function PageMdpModification($username)
 {
-    require('model/modele.php');
+    $req_manager = new UserManager();
 
-    $req_verif = getUser($username);
+    $req_verif = $req_manager->getUser($username);
 
     require('view/mdp_oublier_modification.php');
 
@@ -70,12 +74,13 @@ function PageMdpModification($username)
 
 function MdpOublierModification($reponse, $password, $conf_password, $username)
 {
-    require('model/modele.php');
+    $userManager = new UserManager();
+    $updateManager = new UserManager();
 
     $reponse = htmlspecialchars(trim($reponse));
     $password = trim($password);
     $conf_password = trim($conf_password);
-    $user = getUser($username);
+    $user = $userManager->getUser($username);
     $valid = true;
 
     if($reponse != $user['reponse']) {
@@ -93,7 +98,7 @@ function MdpOublierModification($reponse, $password, $conf_password, $username)
     }
     if($valid) {
         $password_hache = password_hash($password, PASSWORD_DEFAULT);
-        UpdatePassword($password_hache,$username);
+        $updateManager->UpdatePassword($password_hache,$username);
         header('Location: index.php');
         exit;
         
@@ -116,7 +121,8 @@ function PageInscription()
 
 function Inscription($nom, $prenom, $username, $password, $conf_password, $question, $reponse)
 {
-    require('model/modele.php');
+    $userManager = new UserManager();
+    $insertManager = new UserManager();
 
     $nom  = htmlspecialchars(trim($nom));
     $prenom = htmlspecialchars(trim($prenom));
@@ -128,7 +134,7 @@ function Inscription($nom, $prenom, $username, $password, $conf_password, $quest
 
     $valid = true;    
 
-    if(getUser($username) <> "") {
+    if($userManager->getUser($username) <> "") {
         $valid = false;
         $er_username = "Ce nom d'utilisateur existe déjà";
     }
@@ -142,7 +148,7 @@ function Inscription($nom, $prenom, $username, $password, $conf_password, $quest
     }
     if($valid) {
         $password_hache = password_hash($password, PASSWORD_DEFAULT);
-        InsertUser($nom,$prenom,$username,$password_hache, $question, $reponse);
+        $insertManager->InsertUser($nom,$prenom,$username,$password_hache, $question, $reponse);
         header('Location:index.php');
         exit;
     }
@@ -151,16 +157,17 @@ function Inscription($nom, $prenom, $username, $password, $conf_password, $quest
 
 function PageParametre($id_user)
 {
-    require('model/modele.php');
+    $req_donneesManager = new UserManager();
 
-    $req_donnees = getUserById($id_user);
+    $req_donnees = $req_donneesManager->getUserById($id_user);
 
     require('view/parametre_compte.php');
 }
 
 function Parametre($nom, $prenom, $username, $question, $reponse, $id_user) 
 {
-    require('model/modele.php');
+    $userManager = new UserManager();
+    $updateManager = new UserManager();
 
     $nom  = htmlspecialchars(trim($nom));
     $prenom = htmlspecialchars(trim($prenom));
@@ -168,7 +175,7 @@ function Parametre($nom, $prenom, $username, $question, $reponse, $id_user)
     $question = htmlspecialchars(trim($question));
     $reponse = htmlspecialchars(trim($reponse));
 
-    $testUsername = getUser($usernamePost);
+    $testUsername = $userManager->getUser($usernamePost);
 
     $valid = true;    
     if($usernamePost == $_SESSION['username']) {
@@ -184,7 +191,7 @@ function Parametre($nom, $prenom, $username, $question, $reponse, $id_user)
         }
     }
     if($valid) {
-        UpdateUser($nom,$prenom,$username, $question, $reponse, $id_user);
+        $updateManager->UpdateUser($nom,$prenom,$username, $question, $reponse, $id_user);
         $_SESSION['prenom'] = $prenom;
         $_SESSION['nom'] = $nom;
         $_SESSION['username'] = $username;
@@ -197,9 +204,8 @@ function Parametre($nom, $prenom, $username, $question, $reponse, $id_user)
 
 function PageHome()
 {
-    require('model/modele.php');
-
-    $reponse = getActeur();
+    $reponseManager = new ActeurManager(); // Création de l'objet
+    $reponse = $reponseManager->getActeur(); // Appel de la fonction de l'objet
 
     require('view/accueil.php');
 }
@@ -207,14 +213,19 @@ function PageHome()
 function ListActeurDetail()
 
 {
-    require('model/modele.php');
+    $acteurManager = new ActeurManager();
+    $req_Manager = new CommentManager();
+    $nbr_Manager = new CommentManager();
 
-    $acteur = getActeurDetail($_GET['id_acteur']);
-    $req_commentaire = getCommentaire($_GET['id_acteur']);
-    $nbr_commentaire = getNbrCommentaireByActeur($_GET['id_acteur']);
+    $likesManager = new VoteManager();
+    $dislikesManager = new VoteManager();
+
+    $acteur = $acteurManager->getActeurDetail($_GET['id_acteur']);
+    $req_commentaire = $req_Manager->getCommentaire($_GET['id_acteur']);
+    $nbr_commentaire = $nbr_Manager->getNbrCommentaireByActeur($_GET['id_acteur']);
     
-    $likes = getNbrLikeByActeur($_GET['id_acteur']);
-    $dislikes = getNbrDislikeByActeur($_GET['id_acteur']);
+    $likes = $likesManager->getNbrLikeByActeur($_GET['id_acteur']);
+    $dislikes = $dislikesManager->getNbrDislikeByActeur($_GET['id_acteur']);
     
     require('view/ActeurDetail.php');
 
@@ -222,9 +233,9 @@ function ListActeurDetail()
 
 function PostCommentaire($id_user,$id_acteur,$username,$text) 
 {
-    require('model/modele.php');
+    $new_comManager = new CommentManager();
 
-    $new_commentaire = addCommentaire($id_user,$id_acteur,$username,$text);
+    $new_commentaire = $new_comManager->addCommentaire($id_user,$id_acteur,$username,$text);
 
     header('Location: index.php?action=PageActeur&id_acteur='. $id_acteur);
     
@@ -234,46 +245,50 @@ function PostCommentaire($id_user,$id_acteur,$username,$text)
 
 function NbrCommentaireByUser($id_user, $id_acteur)
 {
-    require('model/modele.php');
+    $nbr_comManager = new CommentManager();
 
-    $nbr_commentaire_by_user = getNbrCommentaireByUser($id_user, $id_acteur);
+    $nbr_commentaire_by_user = $nbr_comManager->getNbrCommentaireByUser($id_user, $id_acteur);
 
     require('view/ActeurDetail.php');
 }
 
 function toggle_like($id_acteur,$id_user) {
 
-    require('model/modele.php');
+    $checklikeManager = new VoteManager();
+    $deleteManager = new VoteManager();
+    $insertManager = new VoteManager();
 
-    $checklike = check_like($id_acteur, $id_user);
+    $checklike = $checklikeManager->check_like($id_acteur, $id_user);
 
-    delete_dislike($id_acteur,$id_user);
+    $deleteManager->delete_dislike($id_acteur,$id_user);
     if($checklike == 1) {
-        delete_like($id_acteur,$id_user);
+        $deleteManager->delete_like($id_acteur,$id_user);
     }
     else {
-        insert_like($id_acteur,$id_user);
+        $insertManager->insert_like($id_acteur,$id_user);
     }
-    header('Location:index.php?action=PageActeur&id_acteur=' . $id_acteur);
+    header('Location:index.php?action=PageActeur&id_acteur='. $id_acteur);
 
     require('view/ActeurDetail.php');
 }
 
 function toggle_dislike($id_acteur,$id_user) {
 
-    require('model/modele.php');
+    $checkdislikeManager = new VoteManager();
+    $deleteManager = new VoteManager();
+    $insertManager = new VoteManager();
 
-    $checkdislike = check_dislike($id_acteur, $id_user);
+    $checkdislike = $checkdislikeManager->check_dislike($id_acteur, $id_user);
 
-    delete_like($id_acteur,$id_user);
+    $deleteManager->delete_like($id_acteur,$id_user);
     if($checkdislike == 1) {
-        delete_dislike($id_acteur,$id_user);
+        $deleteManager->delete_dislike($id_acteur,$id_user);
     }
     else {
-        insert_dislike($id_acteur,$id_user);
+        $insertManager->insert_dislike($id_acteur,$id_user);
     }
     
-    header('Location:index.php?action=PageActeur&id_acteur=' . $id_acteur);
+    header('Location:index.php?action=PageActeur&id_acteur='. $id_acteur);
 
     require('view/ActeurDetail.php');
 }
